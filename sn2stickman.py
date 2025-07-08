@@ -2,7 +2,6 @@ import turtle
 import time
 
 def draw_sword(x, y):
-    """Draws a single sword standing upright in the ground."""
     t.pencolor("silver")
     t.pensize(3)
     t.penup()
@@ -16,12 +15,10 @@ def draw_sword(x, y):
     t.goto(x + 10, y + 15)
 
 def draw_stickman(x, y, color, pose="run", walk_phase=0):
-    """Draws a stickman with a corrected 'one leg after the other' run."""
     t.pencolor(color)
     t.pensize(5)
     
     if pose == "meditate":
-        # A larger, more imposing meditation pose
         hip_y = y + 30
         shoulder_y = y + 85
         head_y = y + 105
@@ -46,16 +43,13 @@ def draw_stickman(x, y, color, pose="run", walk_phase=0):
         t.goto(x + 55, shoulder_y)
     
     elif pose == "run":
-        # Naruto run with a corrected, more realistic leg-lifting motion
         hip_y = y + 50
         shoulder_y = y + 70
         head_y = y + 80
-        # Body is offset for a profile view and aggressive lean
         hip_x = x
         shoulder_x = x + 15
         head_x = x + 20
         
-        # Angled Torso and Head
         t.penup()
         t.goto(hip_x, hip_y)
         t.pendown()
@@ -112,7 +106,6 @@ def draw_scene(stickman_pos, stickman_pose, walk_phase=0):
     draw_sword(SWORD_X + 70, GROUND_Y)
     screen.update()
 
-# --- Main Program ---
 if __name__ == "__main__":
     screen = turtle.Screen()
     screen.setup(width=800, height=600)
@@ -127,17 +120,14 @@ if __name__ == "__main__":
     SWORD_X = 0
     stickman_pos = [-250, GROUND_Y]
 
-    # Animation Part 1: Run to the center
     for i in range(25):
         stickman_pos[0] += 10
         draw_scene(stickman_pos, "run", walk_phase=i % 2)
         time.sleep(0.1)
 
-    # Animation Part 2: Sit down and meditate
     draw_scene(stickman_pos, "meditate")
     time.sleep(1)
 
-    # Final text reveal
     t.pencolor("gold")
     t.penup()
     t.goto(0, 200)
