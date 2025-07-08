@@ -6,52 +6,96 @@ def draw_sword(x, y):
     t.pencolor("silver")
     t.pensize(3)
     t.penup()
-    
-    # Blade
     t.goto(x, y)
     t.pendown()
-    t.goto(x, y + 60)
-    
-    # Guard
+    t.goto(x, y + 60) # Blade
     t.pencolor("gold")
     t.penup()
-    t.goto(x - 10, y + 15)
+    t.goto(x - 10, y + 15) # Guard
     t.pendown()
     t.goto(x + 10, y + 15)
-    
-def draw_meditating_stickman(x, y, color):
-    """Draws a stickman in a cross-legged meditation pose."""
+
+def draw_stickman(x, y, color, pose="walk", walk_phase=0):
+    """Draws a stickman in either a walking or meditating pose."""
     t.pencolor(color)
     t.pensize(5)
-    
-    # Crossed Legs
+    hip_y = y + 50
+    head_y = y + 100
+
+    if pose == "meditate":
+        t.penup()
+        t.goto(x, y) # Start at base for legs
+        t.pendown()
+        t.goto(x - 30, y + 30) # Crossed leg
+        t.goto(x, y)
+        t.goto(x + 30, y + 30) # Other crossed leg
+        t.goto(x, y)
+        t.goto(x, head_y) # Torso
+        t.dot(30) # Head
+        t.goto(x - 30, y + 30) # Arm
+        t.penup()
+        t.goto(x, y + 50) # Shoulder
+        t.pendown()
+        t.goto(x + 30, y + 30) # Other arm
+    elif pose == "walk":
+        # Torso and Head
+        t.penup()
+        t.goto(x, hip_y)
+        t.pendown()
+        t.goto(x, head_y)
+        t.dot(30)
+        t.goto(x, head_y - 20) # Neck
+        # Alternating arms and legs for walking
+        if walk_phase == 0:
+            t.goto(x + 15, y + 20) # Forward arm
+            t.penup()
+            t.goto(x, head_y - 20)
+            t.pendown()
+            t.goto(x - 15, y + 20) # Back arm
+            t.penup()
+            t.goto(x, hip_y)
+            t.pendown()
+            t.goto(x - 20, y) # Back leg
+            t.penup()
+            t.goto(x, hip_y)
+            t.pendown()
+            t.goto(x + 20, y) # Forward leg
+        else: # Mirrored phase
+            t.goto(x - 15, y + 20)
+            t.penup()
+            t.goto(x, head_y - 20)
+            t.pendown()
+            t.goto(x + 15, y + 20)
+            t.penup()
+            t.goto(x, hip_y)
+            t.pendown()
+            t.goto(x + 20, y)
+            t.penup()
+            t.goto(x, hip_y)
+            t.pendown()
+            t.goto(x - 20, y)
+
+def draw_scene(stickman_pos, stickman_pose, walk_phase=0):
+    """Clears and redraws the entire scene for one frame of animation."""
+    t.clear()
+    # Draw ground
+    t.pencolor("white")
     t.penup()
-    t.goto(x, y)
+    t.goto(-400, GROUND_Y)
     t.pendown()
-    t.goto(x - 30, y + 30)
-    t.goto(x, y)
-    t.goto(x + 30, y + 30)
-    
-    # Torso and Head
-    t.penup()
-    t.goto(x, y)
-    t.pendown()
-    t.goto(x, y + 60) # Torso
-    t.dot(30) # Head
-    
-    # Arms resting on knees
-    t.goto(x - 30, y + 30)
-    t.penup()
-    t.goto(x, y + 50) # Shoulder
-    t.pendown()
-    t.goto(x + 30, y + 30)
+    t.goto(400, GROUND_Y)
+    # Draw scene elements
+    draw_stickman(stickman_pos[0], stickman_pos[1], "red", stickman_pose, walk_phase)
+    draw_sword(SWORD_X - 70, GROUND_Y)
+    draw_sword(SWORD_X + 70, GROUND_Y)
+    screen.update()
 
 # --- Main Program ---
 if __name__ == "__main__":
     screen = turtle.Screen()
     screen.setup(width=800, height=600)
     screen.bgcolor("black")
-    screen.title("Story of Stickman: Episode 2 - The Calm")
+    screen.title("Story of Stickman: Episode 2 - Flawless Victory")
     screen.tracer(0)
 
     t = turtle.Turtle()
@@ -59,29 +103,24 @@ if __name__ == "__main__":
 
     # Define positions
     GROUND_Y = -150
-    STICKMAN_X = 0
-    
-    # Draw the ground
-    t.pencolor("white")
-    t.penup()
-    t.goto(-400, GROUND_Y)
-    t.pendown()
-    t.goto(400, GROUND_Y)
-    
-    # Draw the scene elements
-    draw_meditating_stickman(STICKMAN_X, GROUND_Y, "red")
-    draw_sword(STICKMAN_X - 70, GROUND_Y)
-    draw_sword(STICKMAN_X + 70, GROUND_Y)
-    
-    # Draw the episode title
-    t.pencolor("gray")
+    SWORD_X = 0
+    stickman_pos = [-250, GROUND_Y] # Start off-screen
+
+    # Animation Part 1: Walk to the center
+    for i in range(25):
+        stickman_pos[0] += 10 # Move stickman to the right
+        draw_scene(stickman_pos, "walk", walk_phase=i % 2)
+        time.sleep(0.08)
+
+    # Animation Part 2: Sit down and meditate
+    draw_scene(stickman_pos, "meditate")
+    time.sleep(1)
+
+    # Final text reveal
+    t.pencolor("gold")
     t.penup()
     t.goto(0, 200)
-    t.write("Episode 2: The Calm", align="center", font=("Arial", 30, "normal"))
-
-    # Update the screen to show everything at once
+    t.write("Flawless Victory", align="center", font=("Impact", 40, "normal"))
     screen.update()
-
-    time.sleep(5) # Pause to view the scene
     
     turtle.done()
