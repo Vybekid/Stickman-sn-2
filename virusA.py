@@ -1,20 +1,19 @@
-import turtle
-import time
+import turtle 
+import time 
 
 def draw_virus():
-
     try:
-        screen = turtle.Screen()
+        screen = turtle.Screen() 
         screen.bgcolor("black")
         screen.title("Virus Animation")
-        
+
         t = turtle.Turtle()
         t.color("lime")
         t.pensize(1)
-        
-        t.speed(10) 
-        
-        time.sleep(3)
+
+        t.speed(10)
+
+        t.sleep(3)
 
         v = 200
         while v > 0:
@@ -28,5 +27,6 @@ def draw_virus():
     except turtle.Terminator:
         print("Drawing terminated by user.")
 
-if __name__ == "__main__":
+if __name__ == "__main__": 
     draw_virus()
+    
